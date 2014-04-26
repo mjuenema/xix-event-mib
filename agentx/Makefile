@@ -17,7 +17,7 @@ xix_event.o: xix_event.c Makefile
 	$(CC) $(CFLAGS) $(DLFLAGS) -c -o xix_event.o xix_event.c
 
 clean:
-	rm -fv xix-eventd xix-eventd.o xix-event.o
+	rm -fv xix-eventd *.o
 
 #mib2c:
 #	MIBDIRS=+../mibs MIBS=+XIX-MIB:XIX-EVENT-MIB mib2c -f xix-event -c mib2c.notify.conf xixEventMib
