@@ -1,0 +1,185 @@
+XIX-EVENT-MIB DEFINITIONS ::= BEGIN
+
+--
+-- Ad-hoc MIB file for sending SNMP traps/notifications
+-- for generic events.
+--
+--
+-- smidump -p XIX-MIB.mib -f tree -tree-full-root -tree-compact XIX-EVENT-MIB.mib 
+-- 
+-- iso(1)
+--   +-org(3)
+--     +-dod(6)
+--       +-internet(1)
+--         +-private(4)
+--           +-enterprises(1)
+--             +-xix(32979)
+--               +-xixEventMib(1)
+--                 +-xixEventMibObjects(1)
+--                   +-xixEventNotifications(0)
+--                   |  +-xixEventSet(1) [xixEventId,xixEventText]
+--                   |  +-xixEventClear(2) [xixEventId]
+--                   +-xixEventObjects(1)
+--                   |  +- r-n DisplayString xixEventId(1)
+--                   |  +- r-n DisplayString xixEventText(2)
+--                   +-xixEventGroups(2)
+--                   |  +-xixEventObjectsGroup(1)
+--                   |  +-xixEventNotificationsGroup(2)
+--                   +-xixEventCompliances(3)
+--                     +-xixEventCompliances(1)
+--
+--
+-- smidump -p XIX-MIB.mib -f identifiers XIX-EVENT-MIB.mib 
+-- 
+-- XIX-EVENT-MIB xixEventMib                node         1.3.6.1.4.1.32979.1
+-- XIX-EVENT-MIB xixEventMibObjects         node         1.3.6.1.4.1.32979.1.1
+-- XIX-EVENT-MIB xixEventNotifications      node         1.3.6.1.4.1.32979.1.1.0
+-- XIX-EVENT-MIB xixEventSet                notification 1.3.6.1.4.1.32979.1.1.0.1
+-- XIX-EVENT-MIB xixEventClear              notification 1.3.6.1.4.1.32979.1.1.0.2
+-- XIX-EVENT-MIB xixEventObjects            node         1.3.6.1.4.1.32979.1.1.1
+-- XIX-EVENT-MIB xixEventId                 scalar       1.3.6.1.4.1.32979.1.1.1.1
+-- XIX-EVENT-MIB xixEventText               scalar       1.3.6.1.4.1.32979.1.1.1.2
+-- XIX-EVENT-MIB xixEventGroups             node         1.3.6.1.4.1.32979.1.1.2
+-- XIX-EVENT-MIB xixEventObjectsGroup       group        1.3.6.1.4.1.32979.1.1.2.1
+-- XIX-EVENT-MIB xixEventNotificationsGroup group        1.3.6.1.4.1.32979.1.1.2.2
+-- XIX-EVENT-MIB xixEventCompliances        node         1.3.6.1.4.1.32979.1.1.3
+-- XIX-EVENT-MIB xixEventCompliances        compliance   1.3.6.1.4.1.32979.1.1.3.1
+--
+--
+-- snmptrap -v 2c -c public nms.example.org '' xixEventSet \
+--         xixEventId s "diskspace.tmp" xixEventText s "/tmp is 95% full"
+--
+-- snmptrap -v 2c -c public nms.example.org '' xixEventClear \
+--         xixEventId s "diskspace.tmp"
+--
+--
+
+--
+-- IMPORTS 
+--
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE
+    FROM SNMPv2-SMI
+
+    MODULE-COMPLIANCE, OBJECT-GROUP, NOTIFICATION-GROUP
+    FROM SNMPv2-CONF
+
+    DisplayString
+    FROM SNMPv2-TC
+
+    xix 
+    FROM XIX-MIB;
+    
+
+--
+-- MODULE-IDENTITY 
+--
+xixEventMib MODULE-IDENTITY
+    LAST-UPDATED    "201404251052Z"
+    ORGANIZATION    "XIX"
+    CONTACT-INFO    "Markus Juenemann <markus@juenemann.net>"
+    DESCRIPTION     "Eventtrap MIB for sending generic events"
+    REVISION        "201404251052Z"
+    DESCRIPTION     "Renamed xixEventMibGroups to xixEventGroups
+                     and xixEventMibCompliances to xixEventCompliances"
+    REVISION        "201301090450Z"
+    DESCRIPTION     "Separate xixEventSet and xixEventClear notifications and
+                     abandon the eventSeverity object as it should be up
+                     to an NMS to determine the severity of an event."
+    REVISION        "201208140000Z"
+    DESCRIPTION     "First version (never actually used)"
+    ::= { xix 1 }
+
+
+xixEventMibObjects OBJECT IDENTIFIER ::= { xixEventMib 1 }
+xixEventNotifications OBJECT IDENTIFIER ::= { xixEventMibObjects 0 }
+xixEventObjects OBJECT IDENTIFIER ::= { xixEventMibObjects 1 }
+xixEventGroups OBJECT IDENTIFIER ::= { xixEventMibObjects 2 }
+xixEventCompliances OBJECT IDENTIFIER ::= { xixEventMibObjects 3 }
+
+
+--
+-- TEXTUAL-CONVENTIONS
+--
+
+
+--
+-- NOTIFICATIONS
+--
+
+xixEventSet NOTIFICATION-TYPE
+    OBJECTS { xixEventId,
+              xixEventText }
+    STATUS current
+    DESCRIPTION "Notification that an event has occured."
+    ::= { xixEventNotifications 1 }
+
+
+xixEventClear NOTIFICATION-TYPE
+    OBJECTS { xixEventId }
+    STATUS current
+    DESCRIPTION "Notification that an event has cleared. The xixEventId should
+                 be used to match a prior xixEventSet notification."
+    ::= { xixEventNotifications 2 }
+
+
+xixEventId OBJECT-TYPE
+    SYNTAX DisplayString(SIZE(1..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION 
+        "A unique identifier for an event. It is also used to match related
+         xixEventSet/xixEventClear pairs."
+    ::= { xixEventObjects 1 }
+
+
+xixEventText OBJECT-TYPE
+    SYNTAX DisplayString(SIZE(0..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION
+        "The textual description of the event in free format."
+    ::= { xixEventObjects 2 }
+
+
+--
+-- OBJECT-GROUP
+--
+xixEventObjectsGroup OBJECT-GROUP
+    OBJECTS { xixEventId,
+              xixEventText }
+    STATUS current
+    DESCRIPTION
+        "The object-group for this MIB."
+    ::= { xixEventGroups 1 }
+
+
+--
+-- NOTIFICATION-GROUP
+--
+
+xixEventNotificationsGroup NOTIFICATION-GROUP
+    NOTIFICATIONS { xixEventSet,
+                    xixEventClear }
+    STATUS current
+    DESCRIPTION
+        "The notification-group for this MIB."
+    ::= { xixEventGroups 2 }
+
+
+
+--
+-- MODULE-COMPLIANCE
+--
+xixEventCompliances MODULE-COMPLIANCE
+    STATUS current
+    DESCRIPTION
+        "The module-compliance for this MIB."
+    MODULE
+        MANDATORY-GROUPS  {
+            xixEventObjectsGroup,
+            xixEventNotificationsGroup
+            }
+    ::= { xixEventCompliances 1 }
+
+END

@@ -1,0 +1,18 @@
+XIX-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY, enterprises FROM SNMPv2-SMI;
+ 
+xix MODULE-IDENTITY
+    LAST-UPDATED    "201301090447Z"
+    ORGANIZATION    "XIX"
+    CONTACT-INFO    "Markus Juenemann <markus@juenemann.net>"
+    DESCRIPTION     "Root MIB for XIX (enterprises.32979)"
+    REVISION        "201301090447Z"
+    DESCRIPTION     "Changed top node from xixMib to xix"
+    REVISION        "200911011153Z"
+    DESCRIPTION     "First version (never actually used)"
+
+    ::= { enterprises 32979 }
+
+END
