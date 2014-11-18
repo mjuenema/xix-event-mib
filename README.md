@@ -34,3 +34,21 @@ filesystem is almost full. It then clears the previous event
     snmptrap -v 2c -c public nms.example.org '' \
         xixEventClear \
         xixEventId s "diskspace.tmp"
+
+
+API
+---
+
+The `api` directory contains libraries for sending XIX-EVENT-MIB traps
+from the following languages.
+
+  * C
+  * Python
+  * PHP (planned)
+  * Perl (planned)
+  * others (maybe)
+
+Currently only SNMPv2c NOTIFICATIONS and INFORMS are implemented. SNMPv1
+and SNMPv3 may be supported later.
+
+
