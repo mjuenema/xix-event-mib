@@ -11,7 +11,7 @@ An *xixEventSet* notification contains a short textual identifier
 (*xixEventId*) and a message (*xixEventText*). The message may contain 
 any kind of text that describes the event.  The purpose of the 
 identifier is to distinguish between different types of events. Its 
-content is generally not meant ot be displayed by an SNMP manager.
+content is generally not meant to be displayed by an SNMP manager.
 
 An *xixEventClear* notification contains only the identifier. Its 
 purpose is to signal to the SNMP manager that a any previously
@@ -44,8 +44,8 @@ from the following languages.
 
   * C
   * Python
+  * Perl
   * PHP (planned)
-  * Perl (planned)
   * others (maybe)
 
 Currently only SNMPv2c NOTIFICATIONS and INFORMS are implemented. SNMPv1
