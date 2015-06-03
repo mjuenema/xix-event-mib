@@ -3,11 +3,18 @@
 NAME := xixeventlib
 
 
-all: c
+all: c python perl
 
-.PHONY: c
+.PHONY: c python perl
+
 c:
 	make -C c/ all
+
+python: c
+	make -C python/ all
+
+perl: c
+	make -C perl/ all
 
 
 $(NAME).so: $(NAME).o
@@ -24,6 +31,9 @@ _$(NAME).so: $(NAME).o $(NAME).i
 	$(CC) -shared $(NAME).o $(NAME)_wrap.o -o _$(NAME).so
 
 clean:
+	make -C c/ clean
+	make -C python/ clean
+	make -C perl/ clean
 	rm -fv *.so 
 	rm -fv *.o 
 	rm -fv *.py  
