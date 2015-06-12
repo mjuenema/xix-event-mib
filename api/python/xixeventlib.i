@@ -1,16 +1,30 @@
 
 %include "../xixeventlib.i";
 
-/* Provide aliases for convenience */
+/* Wrapper with keyword arguments */
 %pythoncode %{
 
-xix_event_set_notification = xix_event_set_notification_2
-xix_event_set = xix_event_set_notification
+def set_event(manager, xix_event_id, xix_event_text,
+              version=2, community='public', inform=False):
 
-xix_event_clear_notification = xix_event_clear_notification_2
-xix_event_clear = xix_event_clear_notification
+    if inform:
+        inform = 1
+    else:
+        inform = 0
 
-xix_event_set_inform = xix_event_set_inform_2
-xix_event_clear_inform = xix_event_clear_inform_2
+    return xix_event(manager, version, community, inform, 
+                     xix_event_id, xix_event_text)
+
+
+def clear_event(manager, xix_event_id,
+              version=2, community='public', inform=False):
+
+    if inform:
+        inform = 1
+    else:
+        inform = 0
+
+    return xix_event(manager, version, community, inform, 
+                     xix_event_id, None)
 
 %}
