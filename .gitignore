@@ -1,0 +1,5 @@
+**.o
+**.so
+**wrap.c
+api/perl/xixeventlib.pm
+api/python/xixeventlib.py
