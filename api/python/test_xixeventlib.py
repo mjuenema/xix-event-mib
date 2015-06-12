@@ -35,11 +35,11 @@ assert clear_event('127.0.0.1', 'test', inform=None) == 0
 assert clear_event('127.0.0.1', 'test', inform=1) == 2
 assert clear_event('127.0.0.1', 'test', inform=0) == 0
 
-# SNMPv1 is not yet implemented
-#
-assert set_event('127.0.0.1', 'test', 'test', version=1) == -1
-assert clear_event('127.0.0.1', 'test', version=1) == -1
+## SNMPv1 is not yet implemented
+##
+#assert set_event('127.0.0.1', 'test', 'test', version=1) == -1
+#assert clear_event('127.0.0.1', 'test', version=1) == -1
 
-# inform=True will always be SNMPv2
-assert set_event('127.0.0.1', 'test', 'test', version=1, inform=True) == 2
-assert clear_event('127.0.0.1', 'test', version=1, inform=True) == 2
+## inform=True will always be SNMPv2
+#assert set_event('127.0.0.1', 'test', 'test', version=1, inform=True) == 2
+#assert clear_event('127.0.0.1', 'test', version=1, inform=True) == 2
