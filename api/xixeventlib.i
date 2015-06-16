@@ -6,6 +6,12 @@
 #include "xixeventlib.h"
 %}
 
+%feature("autodoc", "0");
+int xix_event(char *manager, int version,
+              char *community, int inform,
+              char *xix_event_id, char *xix_event_text);
+
+
 /* xixEventSet (SNMPv2-NOTIFICATION) */
 %feature("autodoc", "0");
 int xix_event_set_notification_2(char *manager,
