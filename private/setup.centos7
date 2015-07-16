@@ -17,9 +17,9 @@ yum -y install rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
 
 yum -y install vim-enhanced git wget gitflow \
                net-snmp net-snmp-devel \
-               python python-devel \
+               python python-devel ipython \
                perl perl-devel perl-ExtUtils-Embed \
-               rubygems ruby-devel
+               rubygems ruby-devel 
 
 yum -y groupinstall 'Development tools'
 
