@@ -19,8 +19,11 @@ yum -y install vim-enhanced git wget gitflow \
                net-snmp net-snmp-devel \
                python python-devel \
                perl perl-devel perl-ExtUtils-Embed \
-               rubygems ruby-devel
+               rubygems ruby-devel \
+               python-pip
 
 yum -y groupinstall 'Development tools'
 
 gem install fpm
+
+pip install cookiecutter
