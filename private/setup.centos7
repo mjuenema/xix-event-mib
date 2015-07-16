@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Setup development environment
+#
+# MJ, 16-July-2015
+
+
+#
+#
+yum -y update
+
+
+# Additional repositories
+#
+yum -y install epel-release-latest-7.noarch.rpm
+yum -y install rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
+
+yum -y install vim-enhanced git wget gitflow \
+               net-snmp net-snmp-devel \
+               python python-devel \
+               perl perl-devel perl-ExtUtils-Embed \
+               rubygems ruby-devel
+
+yum -y groupinstall 'Development tools'
+
+gem install fpm
