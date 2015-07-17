@@ -11,7 +11,6 @@ import types
 
 from pysnmp.entity.rfc3413.oneliner import ntforg
 from pysnmp.proto import rfc1902
-NTFORG = ntforg.NotificationOriginator()
 
 
 DEFAULT_TARGET = "localhost"
@@ -19,6 +18,9 @@ DEFAULT_COMMUNITY = "public"
 DEFAULT_PORT = 162
 DEFAULT_TIMEOUT = 1
 DEFAULT_RETRIES = 3
+
+DEFAULT_AUTH_PROTO = ntforg.usmHMACSHAAuthProtocol
+DEFAULT_PRIV_PROTO = ntforg.usmAesCfb128Protocol
 
 
 OID_XIX_EVENT_SET="1.3.6.1.4.1.32979.1.1.0.1"
@@ -36,8 +38,10 @@ _LOG = logging.getLogger(__name__)
 
 def event(event_id, event_text='',
           target=DEFAULT_TARGET, port=DEFAULT_PORT, community=DEFAULT_COMMUNITY,
-          inform=False, version=2, timeout=DEFAULT_TIMEOUT, retries=DEFAULT_RETRIES,
-          callback)
+          version=2, user=None, authkey=None, privkey=None, 
+          authproto=None, privproto=None,
+          inform=False, timeout=DEFAULT_TIMEOUT, retries=DEFAULT_RETRIES,
+          callback=None, context=None, lifetime=0)
 
     """
     Send an ``xixEventSet`` or ``xixEventClear`` SNMP trap/notification.
@@ -102,6 +106,31 @@ def event(event_id, event_text='',
         defaults to ``public``.
     :type community: String.
 
+    :param version: SNMP version (1=SNMPv1, 2=SNMPv2c, 3=SNMPv3). Setting
+         `version` explicitly is only necessary if SNMPv1 is to be used.
+         It defaults to SNMPv2 and will automatically change to SNMPv3
+         if ``user`` is given.
+    :type version: Integer.
+
+    :param user: The SNMPv3 user. If set, SNMPv3 will be used regardless
+        of `version`. Also set `authkey` and (if required) `privkey` or
+        SNMPv3 security level will be ``noAuthNoPriv``.
+    :type user: String or ``None``.
+
+    :param authkey: SNMPv3 authentication key. Setting this will set the
+        SNMPv3 security level to ``AuthNoPriv``.
+    :type authkey: String or ``None``.
+
+    :param privkey: SNMPv3 privacy key. Setting this will set the SNMPv3
+        security level to ``AuthPriv`` as long as `authkey` is also set.
+    :type privkey: String or ``None``.
+
+    :param authproto: SNMPv3 authentication protocol. This can be set to
+        a PySNMP_ protocol. The default is `pysnmp.entity.rfc3413.oneliner.ntforg.usmHMACSHAAuthProtocol`.
+
+    :param privproto: SNMPv3 privacy protocol. This can be set to a PySNMP_
+        protocol. The default is `pysnmp.entity.rfc3413.oneliner.ntforg.usmAesCfb128Protocol`.
+
     :param inform: Send SNMPv2c/V3 inform instead of notification. Setting
         `inform` to true will force SNMPv2c/3 even if `version` is 1 as
         SNMPv1 does not implement SNMP inform.
@@ -116,6 +145,10 @@ def event(event_id, event_text='',
     :param callback: Setting `callback` to a function makes all operations
         asynchronous. The callback function must have the same signature
         as the callback functions in PySNMP_.
+    :type callback: Function.
+
+    :param context: Context for `callback`. See the PySNMP_ documentation
+        for details.
 
     :param lifetime: Setting `lifetime` to a positive number will suppress
         any future calls to `xixeventlib.event()` for as many seconds
@@ -129,8 +162,65 @@ def event(event_id, event_text='',
 
     """
 
+   
+    if inform:
+        transport_target = ntforg.UdpTransportTarget((target, port), timeout=timeout, retries=retries)
+        notify_type = 'inform'
+        version = 2		
+    else:
+        transport_target = ntforg.UdpTransportTarget((target, port))
+        notify_type = 'trap'
 
+
+    if user:
+        if authproto is None:
+            authproto = DEFAULT_AUTH_PROTO
+
+        if privproto is None:
+            privproto = DEFAULT_PRIV_PROTO
+
+        if authkey and privkey:
+            auth_data = ntforg.UsmUserData(user, authkey, privkey, authProtocol=authproto, privProtocol=privproto)
+        elif authkey:
+            auth_data = ntforg.UsmUserData(user, authkey, authProtocol=authproto)
+        else:
+            auth_data = ntforg.UsmUserData(user)
+
+        version = 3
+    else:
+        auth_data = ntforg.CommunityData(community)
+
+
+    if callback:
+        notif_orig = ntforg.AsynNotificationOriginator()
+        if event_text:
+            # Asynchronous xixEventSet.
+            #
+            return notif_orig.sendNotification(auth_data, transport_target, notify_type,
+                                               OID_XIX_EVENT_CLEAR, 
+                                               (OID_XIX_EVENT_ID, rfc1902.OctetString(xix_event_id)),
+                                               (OID_XIX_EVENT_TEXT, rfc1902.OctetString(xix_event_text))
+                                               (callback, context))
+        else:
+            # Asynchronous xixEventClear.
+            #
+            return notif_orig.sendNotification(auth_data, transport_target, notify_type,
+                                               OID_XIX_EVENT_CLEAR, 
+                                               (OID_XIX_EVENT_ID, rfc1902.OctetString(xix_event_id)),
+                                               (callback, context))
+    else:
+        notif_orig = ntforg.NotificationOriginator()
+        if event_text:
+            # Synchronous xixEventSet.
+            #
+            return notif_orig.sendNotification(auth_data, transport_target, notify_type,
+                                               OID_XIX_EVENT_CLEAR, 
+                                               (OID_XIX_EVENT_ID, rfc1902.OctetString(xix_event_id)),
+                                               (OID_XIX_EVENT_TEXT, rfc1902.OctetString(xix_event_text)))
+        else:
+            # Synchronous xixEventClear.
+            #
+            return notif_orig.sendNotification(auth_data, transport_target, notify_type,
+                                               OID_XIX_EVENT_CLEAR, 
+                                               (OID_XIX_EVENT_ID, rfc1902.OctetString(xix_event_id)))
           
-
-
-

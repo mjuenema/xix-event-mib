@@ -3,3 +3,5 @@
 __author__ = 'Markus Juenemann'
 __email__ = 'markus@juenemann.net'
 __version__ = '0.1.0'
+
+for xixeventlib import event
