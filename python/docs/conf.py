@@ -13,6 +13,18 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+# https://docs.readthedocs.org/en/latest/faq.html#i-get-import-errors-on-libraries-that-depend-on-c-modules
+#
+import sys
+from mock import Mock as MagicMock
+
+class Mock(MagicMock):
+    @classmethod
+    def __getattr__(cls, name):
+            return Mock()
+
+MOCK_MODULES = ['pysnmp']
+
 import sys
 import os
 
