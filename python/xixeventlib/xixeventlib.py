@@ -41,7 +41,7 @@ def event(event_id, event_text='',
           version=2, user=None, authkey=None, privkey=None, 
           authproto=None, privproto=None,
           inform=False, timeout=DEFAULT_TIMEOUT, retries=DEFAULT_RETRIES,
-          callback=None, context=None, lifetime=0)
+          callback=None, context=None, lifetime=0):
 
     """
     Send an ``xixEventSet`` or ``xixEventClear`` SNMP trap/notification.
