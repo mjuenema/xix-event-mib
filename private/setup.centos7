@@ -27,4 +27,5 @@ yum -y groupinstall 'Development tools'
 
 gem install fpm
 
-pip install cookiecutter pysnmp nose ludibrio flake8 minimock
+pip install cookiecutter pysnmp nose ludibrio flake8 minimock \
+            sphinx
