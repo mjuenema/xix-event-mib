@@ -10,7 +10,7 @@ except ImportError:
 from os.path import join, dirname
 
 
-from xix-event-mib.config import NAME, VERSION, LICENSE
+from xixeventlib.config import NAME, VERSION, LICENSE
 
 readme = open(join(dirname(__file__), 'README.rst')).read()
 history = open('HISTORY.rst').read().replace('.. :changelog:', '')
@@ -33,16 +33,16 @@ setup(
     author_email='markus@juenemann.net',
     url='https://github.com/mjuenema/xix-event-mib',
     packages=[
-        'xix-event-mib',
+        'xixeventlib',
     ],
-    package_dir={'xix-event-mib':
-                 'xix-event-mib'},
+    package_dir={'xixeventlib':
+                 'xixeventlib'},
     include_package_data=True,
     install_requires=requirements,
     license=LICENSE,
     zip_safe=False,
 
-    keywords='xix-event-mib',
+    keywords='xixeventlib',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
