@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-xixeventlib
-===========
+Welcome to the XIX-EVENT-MIB documentation!
+===========================================
 
 Contents:
 
@@ -12,8 +12,16 @@ Contents:
    :maxdepth: 2
 
    readme
-   installation
-   usage
+   mib
+   api
    contributing
    authors
    history
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+

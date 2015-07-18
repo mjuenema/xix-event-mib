@@ -1,6 +1,6 @@
-===============================
+===========
 xixeventlib
-===============================
+===========
 
 .. image:: https://badge.fury.io/py/xix-event-mib.png
     :target: http://badge.fury.io/py/xix-event-mib

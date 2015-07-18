@@ -20,7 +20,8 @@ yum -y install vim-enhanced git wget gitflow \
                python python-devel \
                perl perl-devel perl-ExtUtils-Embed \
                rubygems ruby-devel \
-               python-pip
+               python-pip \
+               libsmi
 
 yum -y groupinstall 'Development tools'
 
