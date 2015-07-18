@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 # Setup development environment
 #
@@ -26,4 +26,4 @@ yum -y groupinstall 'Development tools'
 
 gem install fpm
 
-pip install cookiecutter
+pip install cookiecutter pysnmp nose ludibrio flake8 minimock
