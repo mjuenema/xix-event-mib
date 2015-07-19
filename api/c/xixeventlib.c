@@ -3,7 +3,9 @@
   xixeventlib.c
 
   Functions for sending xixEventSet and xixEventClear TRAPS,
-  NOTIFICATIONS and INFORMS in SNMPv1 and SNMPV2c.
+  NOTIFICATIONS and INFORMS in SNMPv1, SNMPV2c and SNMPv3.
+
+  Currently only SNMPv2c has been implemented!
 
   Markus Juenemann - <markus@juenemann.net>
 
@@ -133,12 +135,8 @@ int xix_event_clear_inform_2(char *manager,
 }
 
 
-
 /* 
 	Send an XIX-EVENT-MIB TRAP, NOTIFICATION or INFORM.
-
-	This function is not meant to be called directly. There
-	are other functions that populate the arguments correctly.
 
 	@param manager: Hostname or IP address of SNMP manager.
 	@param version: The SNMP version (2=2c, others=1).
@@ -296,7 +294,7 @@ int xix_event(char *manager, int version,
     } /* if(session.version == SNMP_VERSION_1) */ 
 
 
-    /* Send the crap. */
+    /* Send the stuff. */
     if (inform) {
         status = snmp_synch_response(ss, pdu, &response);
     } else {
