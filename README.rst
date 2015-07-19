@@ -39,15 +39,11 @@ filesystem is almost full. It then clears the previous event
 API
 ---
 
-The ``python/`` directory contains a Python package for sending XIX-EVENT-MIB
-SNMPv2c/SNMPv3 notifications and informs as well as SNMPv1 traps. It
-requires PySNMP to be installed.
-
 The ``api/`` directory contains libraries for sending XIX-EVENT-MIB 
 SNMPv2c notifications and informs from the following languages.
 
 * C
-* Python (if PySNMP is not available)
+* Python (my separate `python-xixeventlib`` project may be a better fit).
 * Perl
 * PHP (planned)
 * others (maybe)

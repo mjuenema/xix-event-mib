@@ -13,7 +13,6 @@ Contents:
 
    readme
    mib
-   api
    contributing
    authors
    history
